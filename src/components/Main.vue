@@ -170,7 +170,6 @@ import { getSqlList, getStartSql, getDownLoadUrl, getExportCity } from '../dataS
 import { appUtil } from '../config'
 import plan from '../data/plan.js'
 // import VueSweetalert2 from './vue-sweetalert2'
-import $ from 'jquery'
 // Vue.use(VueSweetalert2)
 export default {
   name: 'Main',
