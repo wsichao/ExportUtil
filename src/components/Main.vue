@@ -169,6 +169,7 @@
 import { getSqlList, getStartSql, getDownLoadUrl, getExportCity } from '../dataService/api';
 import { appUtil } from '../config'
 import plan from '../data/plan.js'
+import $ from 'jquery'
 // import VueSweetalert2 from './vue-sweetalert2'
 // Vue.use(VueSweetalert2)
 export default {
@@ -463,7 +464,7 @@ export default {
           }
         });
         return
-      } else if (this.addradio == 0 && this.selectExportValue != '整库') {
+      } else if (this.addradio == 0 && this.selectExportValue != '整库' &&  this.selectExportValue != '图幅') {
         this.$alert('请先选择合并导出方式！', '警告', {
           confirmButtonText: '确定',
           callback: action => {
@@ -530,7 +531,7 @@ export default {
       var param = {
         sqlstr: this.sqlText,
         fileName: this.fileName,
-        meshlist: meshIdCDB,
+        meshList: meshIdCDB,
         dbId: selectDbid,
         user: this.userId,
         isCombine: conbineData,
@@ -547,9 +548,19 @@ export default {
           $eleForm.attr("action", res.data);
           $(document.body).append($eleForm);
           $eleForm.submit();
-        } else {
+        } else if (res.data == null) {
           // 弹窗
           self.$alert(res.errmsg, '警告', {
+            confirmButtonText: '确定',
+            callback: action => {
+              self.$message({
+                type: 'info',
+                message: `action: ${ action }`
+              });
+            }
+          });
+        } else {
+          self.$alert('请检查下载接口！！！', '警告', {
             confirmButtonText: '确定',
             callback: action => {
               self.$message({
@@ -580,11 +591,11 @@ export default {
     tablePagination: tablePagination,
     diyTest: diyTest // 自定义输入时互斥
   },
-  watch: {
-      checkCityData(val) {
-        console.log(val)
-      }
-  },
+  // watch: {
+  //     checkCityData(val) {
+  //       console.log(val)
+  //     }
+  // },
 }
 
 function tablePagination() {
