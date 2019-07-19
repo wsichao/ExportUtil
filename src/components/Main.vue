@@ -295,6 +295,19 @@ export default {
     }, // 导出数据库类型
 
     startSql() { // 执行按钮
+      let newSqlText = this.sqlText.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      if (['delete', 'update', 'truncate', 'drop', 'merg'].includes(newSqlText.split(' ')[0])) {
+        this.$alert('非法语句，请检查！', '警告', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
+        return
+      }
       if (this.sqlText === '') {
         this.$alert('SQL语句不能为空！', '警告', {
           confirmButtonText: '确定',
@@ -442,6 +455,19 @@ export default {
     },
 
     download() { // 下载按钮
+      let newSqlText = this.sqlText.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      if (['delete', 'update', 'truncate', 'drop', 'merg'].includes(newSqlText.split(' ')[0])) {
+        this.$alert('非法语句，请检查！', '警告', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
+        return
+      }
       if (this.sqlText === '') {
         this.$alert('SQL语句不能为空！', '警告', {
           confirmButtonText: '确定',
@@ -799,7 +825,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         margin: 10px 0 0 10px;
         font-size: 16px;
         border-radius: 5px 5px 0 0;
-        box-shadow: 0px 0px 4px #444;
         color: #fff;
         background-color: #4aaaf4
       }
@@ -811,7 +836,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         margin-left: 10px;
         color: rgb(70, 68, 68);
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 1px;
         background-color: #fff
       }
@@ -823,7 +847,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 16px;
         color: #fff;
         margin-left: 10px;
-        box-shadow: 0px 0px 4px #444;
         border-top: #eceaea solid 0.5px;
         background-color: #4aaaf4
       }
@@ -836,7 +859,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         color: rgb(70, 68, 68);
         margin-left: 10px;
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 0.5px;
         background-color: #fff
       }
@@ -849,7 +871,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         color: rgb(70, 68, 68);
         margin-left: 10px;
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 0.5px;
         background-color: #fff
       }
@@ -862,7 +883,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         color: rgb(70, 68, 68);
         margin-left: 10px;
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 0.5px;
         background-color: #fff
       }
