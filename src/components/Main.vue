@@ -11,7 +11,7 @@
           <el-radio v-model="viewNumber" label="50" style="color: #000">50条</el-radio>
         </div>
           <div class="tableData"  style="margin:10px 0 0 10px">
-            <el-table class="tables" :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="border: #ccc 1px solid; header-row-style:height: 30px; row-style:height: 20px" height="460" max-height="460">
+            <el-table class="tables" :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="border: 1px solid #DCDFE6; header-row-style:height: 30px; row-style:height: 20px" height="460" max-height="460">
               <el-table-column v-for="item in tableName" :key="item" :label="item" :prop="item" :show-overflow-tooltip="true" min-width="200"></el-table-column>
             </el-table>
             <el-pagination
