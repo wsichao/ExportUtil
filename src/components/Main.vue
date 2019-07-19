@@ -11,7 +11,7 @@
           <el-radio v-model="viewNumber" label="50" style="color: #000">50条</el-radio>
         </div>
           <div class="tableData"  style="margin:10px 0 0 10px">
-            <el-table class="tables" :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="border: #ccc 1px solid; header-row-style:height: 30px; row-style:height: 20px" height="460" max-height="460">
+            <el-table class="tables" :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" style="border: 1px solid #DCDFE6; header-row-style:height: 30px; row-style:height: 20px" height="460" max-height="460">
               <el-table-column v-for="item in tableName" :key="item" :label="item" :prop="item" :show-overflow-tooltip="true" min-width="200"></el-table-column>
             </el-table>
             <el-pagination
@@ -169,6 +169,7 @@
 import { getSqlList, getStartSql, getDownLoadUrl, getExportCity } from '../dataService/api';
 import { appUtil } from '../config'
 import plan from '../data/plan.js'
+import $ from 'jquery'
 // import VueSweetalert2 from './vue-sweetalert2'
 // Vue.use(VueSweetalert2)
 export default {
@@ -294,6 +295,19 @@ export default {
     }, // 导出数据库类型
 
     startSql() { // 执行按钮
+      let newSqlText = this.sqlText.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      if (['delete', 'update', 'truncate', 'drop', 'merg'].includes(newSqlText.split(' ')[0])) {
+        this.$alert('非法语句，请检查！', '警告', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
+        return
+      }
       if (this.sqlText === '') {
         this.$alert('SQL语句不能为空！', '警告', {
           confirmButtonText: '确定',
@@ -441,6 +455,19 @@ export default {
     },
 
     download() { // 下载按钮
+      let newSqlText = this.sqlText.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+      if (['delete', 'update', 'truncate', 'drop', 'merg'].includes(newSqlText.split(' ')[0])) {
+        this.$alert('非法语句，请检查！', '警告', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${ action }`
+            });
+          }
+        });
+        return
+      }
       if (this.sqlText === '') {
         this.$alert('SQL语句不能为空！', '警告', {
           confirmButtonText: '确定',
@@ -463,7 +490,7 @@ export default {
           }
         });
         return
-      } else if (this.addradio == 0 && this.selectExportValue != '整库') {
+      } else if (this.addradio == 0 && this.selectExportValue != '整库' &&  this.selectExportValue != '图幅') {
         this.$alert('请先选择合并导出方式！', '警告', {
           confirmButtonText: '确定',
           callback: action => {
@@ -530,7 +557,7 @@ export default {
       var param = {
         sqlstr: this.sqlText,
         fileName: this.fileName,
-        meshlist: meshIdCDB,
+        meshList: meshIdCDB,
         dbId: selectDbid,
         user: this.userId,
         isCombine: conbineData,
@@ -547,9 +574,19 @@ export default {
           $eleForm.attr("action", res.data);
           $(document.body).append($eleForm);
           $eleForm.submit();
-        } else {
+        } else if (res.data == null) {
           // 弹窗
           self.$alert(res.errmsg, '警告', {
+            confirmButtonText: '确定',
+            callback: action => {
+              self.$message({
+                type: 'info',
+                message: `action: ${ action }`
+              });
+            }
+          });
+        } else {
+          self.$alert('请检查下载接口！！！', '警告', {
             confirmButtonText: '确定',
             callback: action => {
               self.$message({
@@ -580,11 +617,11 @@ export default {
     tablePagination: tablePagination,
     diyTest: diyTest // 自定义输入时互斥
   },
-  watch: {
-      checkCityData(val) {
-        console.log(val)
-      }
-  },
+  // watch: {
+  //     checkCityData(val) {
+  //       console.log(val)
+  //     }
+  // },
 }
 
 function tablePagination() {
@@ -788,7 +825,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         margin: 10px 0 0 10px;
         font-size: 16px;
         border-radius: 5px 5px 0 0;
-        box-shadow: 0px 0px 4px #444;
         color: #fff;
         background-color: #4aaaf4
       }
@@ -800,7 +836,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         margin-left: 10px;
         color: rgb(70, 68, 68);
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 1px;
         background-color: #fff
       }
@@ -812,7 +847,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 16px;
         color: #fff;
         margin-left: 10px;
-        box-shadow: 0px 0px 4px #444;
         border-top: #eceaea solid 0.5px;
         background-color: #4aaaf4
       }
@@ -825,7 +859,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         color: rgb(70, 68, 68);
         margin-left: 10px;
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 0.5px;
         background-color: #fff
       }
@@ -838,7 +871,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         color: rgb(70, 68, 68);
         margin-left: 10px;
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 0.5px;
         background-color: #fff
       }
@@ -851,7 +883,6 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         font-size: 14px;
         color: rgb(70, 68, 68);
         margin-left: 10px;
-        box-shadow: 2px 0px 4px rgb(189, 187, 187);
         border-top: #eceaea solid 0.5px;
         background-color: #fff
       }
