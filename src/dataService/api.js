@@ -20,4 +20,4 @@ export const getStartSql = param => { return getReq(`${window.config.url}/editor
 
 export const getDownLoadUrl = param => { return getReq(`${window.config.url}/editor/export/exportshp?reqContext={"countryCode":"CN"}`, param)}; // 下载按钮
 
-export const getExportCity = param => { return getReq(`${window.config.url}/editor/export/queryCitys?reqContext={"countryCode":"CN"}&regionId=` + param.param.regionId)}; // 按城市导出
+export const getExportCity = param => { return getReq(`${window.config.url}/editor/export/queryArea?reqContext={"countryCode":"CN"}`)}; // 获取区域
