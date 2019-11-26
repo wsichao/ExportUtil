@@ -28,82 +28,12 @@
       <!-- 左右布局分割线 -->
 
       <div class="rightShowData">
-          <div class="rightTitle">
-            <div>
-              <span style="margin-left: 15px">数据导出</span>
-            </div>
-            <div>
-              <el-button style="margin: 0 30px 0 0;" v-on:click="download" id="btn2" size="mini">下载<i class="el-icon-download el-icon--right"></i></el-button>
-            </div>
-          </div>
-          <div class="rightTitleTwo">
-            <span style="margin-left: 13px">数据来源</span>
-          </div>
-          <div class="edition">
-            <span style="margin-left: 13px">版本</span>
-            <el-select style="margin-right: 5px;" v-model="editionValue" size="mini" :disabled="true" collapse-tags>
-              <el-option
-                v-for="item in editionOptions"
-                :key="item.id"
-                :label="item.label"
-                v-model="item.label">
-              </el-option>
-            </el-select>
-          </div>
-          <div class="dataBaseSelect">
-            <span style="margin-left: 13px">数据库</span>
-            <span style="font-size: 10px">{{sqlSelect}}</span>
-            <div v-show="deletImgShow" v-on:click="deletSelectRadio">
-              <img src="static/delet.png" width="20" height="20">
-            </div>
-            <el-popover placement="right" width="700" trigger="click">
-              <table style="width:100%">
-                <tr>
-                  <td style="height: 30px; width: 80px;">
-                    大区库
-                  </td>
-                  <td @change="selectValue">
-                    <el-checkbox v-model="radio" :disabled="sqlChecked"></el-checkbox>
-                  </td>
-                </tr>
-              </table>
-              <table style="width:100%">
-                <tr style="display: flex;flex-wrap: wrap;border-top: 1px solid rgba(0, 0, 0, 0.19);align-items: center">
-                  <td style="height: 50px; width: 80px;">
-                    成果库
-                  </td>
-                  <td @change="selectValue">
-                    <el-radio v-model="radio" label="日成果库">日成果库</el-radio>
-                    <el-radio v-model="radio" label="月成果库">月成果库</el-radio>
-                  </td>
-                </tr>
-              </table>
-              <table style="width:100%">
-                <tr style="display: flex;flex-wrap: wrap;border-top: 1px solid rgba(0, 0, 0, 0.19);align-items: center">
-                  <td style="width: 80px;height: 50px;">
-                    自定义库
-                  </td>
-                  <td>
-                    <el-input v-model="userId" type="text" style="width: 100px;height: 30px" @change="diyTest" placeholder="用户名"/>
-                  </td>
-                  <td>
-                    <el-input v-model="passWord" type="text" style="width: 100px;height: 30px" @change="diyTest" placeholder="口令"/>
-                  </td>
-                  <td>
-                    <el-input v-model="sqlTypeText" type="text" style="width: 100px;height: 30px" @change="diyTest" placeholder="数据库"/>
-                  </td>
-                </tr>
-              </table>
-              <el-button style="margin-right: 5px; width: 80px" v-on:click="showSqlList" size="mini" slot="reference">请选择</el-button>
-            </el-popover>
-          </div>
-
-
-
-          
           <div class="exportMode">
             <div>
               <span style="margin-left: 15px">导出方式</span>
+            </div>
+            <div>
+              <el-button style="margin: 0 10px 0 0;" v-on:click="download" id="btn2" size="mini">下载<i class="el-icon-download el-icon--right"></i></el-button>
             </div>
           </div>
           <div class="edition">
@@ -147,18 +77,22 @@
               </table>
             </el-dialog>
           </div>
-          <div v-for="items in citySelectArr" >
-            <div class="selectExportItem" v-if="selectExportValue === '区域'" v-for="item in items.citys" :key="item">
-              <span style="width: 170px">{{item}}</span>
-              <div v-on:click="deletSelectCheck(item)">
-                <img src="static/delet.png" width="20" height="20">
+          <div v-for="items in citySelectArr" v-bind:key="items" >
+            <div v-if="selectExportValue === '区域'">
+              <div class="selectExportItem" v-for="item in items.citys" :key="item">
+                <span style="width: 170px">{{item}}</span>
+                <div v-on:click="deletSelectCheck(item)">
+                  <img src="static/delet.png" width="20" height="20">
+                </div>
               </div>
             </div>
           </div>
-          <div class="selectExportItem" v-if="selectExportValue === '省份'" v-for="item in checkData" :key="item">
-            <span>{{item}}</span>
-            <div v-on:click="deletSelectCheckPro(item)">
-              <img src="static/delet.png" width="20" height="20">
+          <div v-if="selectExportValue === '省份'">
+            <div class="selectExportItem" v-for="item in checkData" :key="item">
+              <span>{{item}}</span>
+              <div v-on:click="deletSelectCheckPro(item)">
+                <img src="static/delet.png" width="20" height="20">
+              </div>
             </div>
           </div>
           <div class="edition" v-if="addExportShow">
@@ -207,7 +141,6 @@ export default {
       sqlSelect: '', // 勾选项的value
       meshId: '', // 图幅号
       fileName: '', // 导出文件名
-      editionValue: 'fm_sys',
       selectExportValue: '区域',
       loading: false, // 加载动画
       downloadLoad: false, // 全屏加载
@@ -247,7 +180,7 @@ export default {
       }],
       citySelectArr: [
         {
-          lable: '请选择',
+          lable: '',
           citys:[]
         }
       ],
@@ -283,12 +216,6 @@ export default {
 
     // 导出方式 '请选择' 按钮触发事件
     showExportSqlList () {
-      if (this.radio == 0) {
-        this.$alert('请先选择数据库！', '警告', {
-          confirmButtonText: '确定',
-        });
-        return
-      }
       if (this.selectExportValue == '区域') {
         this.cityDialog = true;
       } else if (this.selectExportValue == '省份') {
@@ -407,17 +334,6 @@ export default {
           }
         });
         return
-      } else if (this.radio == 0 && this.userId == '' && this.passWord == '' && this.sqlTypeText == '') {
-        this.$alert('请先选择数据库！', '警告', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-          }
-        });
-        return
       }
       if (this.selectExportValue == '图幅' && this.meshId == '') {
         this.$alert('请先输入图幅号！', '警告', {
@@ -442,14 +358,6 @@ export default {
           }
         });
         return
-      }
-
-      if (this.radio === '日成果库') {
-        var selectDbid = this.sqlDayMon.desDayAll
-      } else if (this.radio === '月成果库') {
-        var selectDbid = this.sqlDayMon.desMonAll
-      } else if (this.radio === true) {
-        selectDbid = '';
       }
 
       var regionTypeData = 0;
@@ -485,24 +393,19 @@ export default {
       var meshIdCDB = ToCDB(this.meshId);
       // 执行接口传参
       let param = {
-        dbId: selectDbid,
+        bizType: 'omToShp',
         count: this.viewNumber,
         sqlstr: this.sqlText,
         meshList: meshIdCDB,
-        user: this.userId,
-        password: this.passWord,
-        dbParam: this.sqlTypeText,
         regionType: regionTypeData,
         regionList: regionListData
       }
       if (this.radio == 0) { // radio为0时，则代表用户选择的是自定义导出，即输入了账户密码
         param = {
+          bizType: 'omToShp',
           count: this.viewNumber,
           sqlstr: this.sqlText,
           meshList: meshIdCDB,
-          user: this.userId,
-          password: this.passWord,
-          dbParam: this.sqlTypeText,
           regionType: regionTypeData,
           regionList: regionListData
         }
@@ -541,11 +444,6 @@ export default {
           confirmButtonText: '确定',
         });
         return
-      } else if (this.radio == 0 && this.userId == '' && this.passWord == '' && this.sqlTypeText == '') {
-        this.$alert('请先选择数据库！', '警告', {
-          confirmButtonText: '确定',
-        });
-        return
       } else if (this.addradio == 0 && this.selectExportValue != '整库' &&  this.selectExportValue != '图幅') {
         this.$alert('请先选择合并导出方式！', '警告', {
           confirmButtonText: '确定',
@@ -567,14 +465,6 @@ export default {
         regionTypeData = 3
       } else {
         regionTypeData = 0
-      }
-
-      if (this.radio == '日成果库') {
-        var selectDbid = this.sqlDayMon.desDayAll
-      } else if (this.radio == '月成果库') {
-        var selectDbid = this.sqlDayMon.desMonAll
-      } else if (this.radio == true) { // 选择大区库时，不需要传dbid
-        selectDbid = '';
       }
 
       if (this.addradio == 1) {
@@ -605,14 +495,11 @@ export default {
       var meshIdCDB = ToCDB(this.meshId);
       // 下载接口传参
       var param = {
-        dbId: selectDbid,
+        bizType: 'omToShp',
         sqlstr: this.sqlText,
         fileName: this.fileName,
         meshList: meshIdCDB,
-        user: this.userId,
         isCombine: conbineData,
-        password: this.passWord,
-        dbParam: this.sqlTypeText,
         regionType: regionTypeData,
         regionList: regionListData
       }
@@ -639,13 +526,10 @@ export default {
     },
 
     choseValue: choseValue, // 导出方式
-    selectValue: selectValue, // 勾选大区库或成果库，联动
     checkValue: checkValue,
-    deletSelectRadio: deletSelectRadio, // 清空按钮
     deletSelectCheck: deletSelectCheck, // 多选清空
     deletSelectCheckPro: deletSelectCheckPro,
     ToCDB: ToCDB, // 全角转半角
-    diyTest: diyTest // 自定义输入时互斥
   },
 }
 function choseValue(item) { // 导出栏点击按钮页面数据
@@ -676,34 +560,6 @@ function choseValue(item) { // 导出栏点击按钮页面数据
   }
 }
 
-function selectValue() { // 勾选联动
-  this.checkCityData = [],
-  this.checkData = [],
-  this.sqlSelect = this.radio
-  if (this.radio === true) {
-    this.sqlSelect = '大区库',
-    this.exportModeOptions[1].disabled = true
-  } else if (this.radio === false) {
-    this.sqlSelect = '',
-    this.exportModeOptions[1].disabled = false,
-    this.deletImgShow = false
-  }
-  if (this.radio != '') {
-    this.deletImgShow = true
-  }
-  this.userId = '',
-  this.passWord = '',
-  this.sqlTypeText = '',
-  this.selectShow = false
-  if (this.radio == '日成果库' || this.radio == '月成果库') { // 如果选择的是日月成果库，由于需求不明，暂时只能按整库来导出，后续需要改善
-    this.btnShow = true,
-    this.selectShow = true,
-    this.addExportShow = false,
-    this.mapNumberShow = false,
-    this.selectExportValue = '整库'
-  }
-}
-
 function checkValue() {
   if (this.selectExportValue == '省份') {
     this.allCheckData = this.checkData
@@ -712,20 +568,6 @@ function checkValue() {
   }
   if (this.allCheckData != '') {
     this.deletCheckImgShow = true
-  }
-}
-
-function deletSelectRadio() { // 勾选联动之后删除功能
-  this.radio = 0,
-  this.sqlSelect = '',
-  this.deletImgShow = false,
-  this.userId = '',
-  this.passWord = '',
-  this.sqlTypeText = '',
-  this.exportModeOptions[1].disabled = false,
-  this.selectShow = false
-  if (this.selectExportValue === '整库') {
-    this.sqlChecked = true
   }
 }
 
@@ -749,29 +591,18 @@ function deletSelectCheckPro(item) {
   this.deletCheckImgShow = false
 }
 
-function diyTest() { // 自定义与(大区库和成果库)互斥
-  this.radio = 0,
-  this.sqlSelect = '',
-  this.deletImgShow = false,
-  this.btnShow = true,
-  this.selectShow = true,
-  this.addExportShow = false,
-  this.mapNumberShow = false,
-  this.selectExportValue = '整库'
+function ToCDB(str) {
+    var tmp = "";
+    for (var i = 0; i < str.length; i++) {
+        if (str.charCodeAt(i) > 65248 && str.charCodeAt(i) < 65375) {
+            tmp += String.fromCharCode(str.charCodeAt(i) - 65248);
+        }
+        else {
+            tmp += String.fromCharCode(str.charCodeAt(i));
+        }
+    }
+    return tmp
 }
-
-  function ToCDB(str) {
-      var tmp = "";
-      for (var i = 0; i < str.length; i++) {
-          if (str.charCodeAt(i) > 65248 && str.charCodeAt(i) < 65375) {
-              tmp += String.fromCharCode(str.charCodeAt(i) - 65248);
-          }
-          else {
-              tmp += String.fromCharCode(str.charCodeAt(i));
-          }
-      }
-      return tmp
-  }
 
 </script>
 
@@ -835,22 +666,10 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
     .rightShowData {
       height: 100%;
       width: 40%;
-      margin: 0 10px 0 10px;
+      margin: 10px 10px 0 10px;
       display: inline;
       flex-direction: column;
       flex-wrap: wrap;
-      .rightTitle {
-        width: 98%;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 10px 0 0 10px;
-        font-size: 16px;
-        border-radius: 5px 5px 0 0;
-        color: #fff;
-        background-color: #4ab6f4
-      }
       .rightTitleTwo {
         width: 97.7%;
         height: 40px;
@@ -868,6 +687,7 @@ function diyTest() { // 自定义与(大区库和成果库)互斥
         height: 40px;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         font-size: 16px;
         color: #fff;
         margin-left: 10px;
